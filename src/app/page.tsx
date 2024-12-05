@@ -67,7 +67,7 @@ export default function Home() {
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div className="w-full max-w-2xl p-6 bg-gray-50 rounded-xl shadow-lg">
         <h1 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-          Paryatan: Ask us for Travel Recommendations
+          Paryatan: Ask us for travel recommendations
         </h1>
         <div className="flex flex-col gap-4">
           <input
