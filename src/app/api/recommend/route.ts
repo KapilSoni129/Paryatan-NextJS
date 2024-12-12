@@ -22,7 +22,7 @@ import { NextResponse } from "next/server";
   }: RecommendationRequest): string {
     const preferences = preference.join(", ");
 
-    const dayPlanFormat = `[{"Date":"YYYY-MM-DD","Places":[{"Name":"Place Name","City":"City Name","TypeOfDestination":"Destination Type","DistanceFromUser": "Distance","Latitude":0.0000,"Longitude":0.0000}]}]`;
+    const dayPlanFormat = `[{"Date":"YYYY-MM-DD","Places":[{"Name":"Place Name","City":"City Name","Type":"Destination Type","DistanceFromUser": "Distance","Latitude":0.0000,"Longitude":0.0000, "Rating":0.0, "Tips":"Tips"}]}]`;
   
     if (latitude && longitude) {
       return (
@@ -31,6 +31,7 @@ import { NextResponse } from "next/server";
         "Suggest me places to visit within a range of 200Km.\n" +
         `My location preferences to visit are ${preferences}.\n` +
         `The journey start date is ${startDate}. The journey end date is ${endDate}.\n` +
+        "Please also take into account the weather conditions and month of the location and try to make a round trip\n" +
         "Don't give repetitive locations and give unique preference of locations for each day.\n"
       );
     } else {
@@ -39,6 +40,7 @@ import { NextResponse } from "next/server";
         `\nSuggest me places to visit in ${city}.\n` +
         `My location preferences to visit are ${preferences}.\n` +
         `The journey start date is ${startDate}. The journey end date is ${endDate}.\n` +
+        "Please also take into account the weather conditions and month of the location and try to make a round trip\n" +
         "Don't give repetitive locations and give unique preference of locations for each day."
       );
     }
