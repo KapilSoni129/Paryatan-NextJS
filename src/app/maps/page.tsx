@@ -20,7 +20,7 @@ interface Props {
     current: boolean;
 }
 
-const TripPage: React.FC<Props> = ({ output, current }) => {
+function TripPage({ output, current }: Props) {
     const [currentDayIndex, setCurrentDayIndex] = useState(0);
     const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral | null>(null);
     const [isLoading, setIsLoading] = useState(true);
