@@ -27,11 +27,11 @@ import { NextResponse } from "next/server";
     if (latitude && longitude) {
       return (
         `Give your response strictly in this format.:${dayPlanFormat}\n` +
-        `My latitudinal and longitudinal coordinates are ${latitude} ${longitude}\n` +
+        `My latitudinal and longitudinal coordinates are ${latitude} latitude ${longitude} longitude\n` +
         "Suggest me places to visit within a range of 200Km.\n" +
         `My location preferences to visit are ${preferences}.\n` +
         `The journey start date is ${startDate}. The journey end date is ${endDate}.\n` +
-        "Please also take into account the weather conditions and month of the location and try to make a round trip\n" +
+        "Please also take into account the weather conditions and month of the location and try to make a round trip to comeback to the start location.\n" +
         "Don't give repetitive locations and give unique preference of locations for each day.\n"
       );
     } else {
@@ -40,7 +40,7 @@ import { NextResponse } from "next/server";
         `\nSuggest me places to visit in ${city}.\n` +
         `My location preferences to visit are ${preferences}.\n` +
         `The journey start date is ${startDate}. The journey end date is ${endDate}.\n` +
-        "Please also take into account the weather conditions and month of the location and try to make a round trip\n" +
+        "Please also take into account the weather conditions and month of the location and try to make a round trip to comeback to the start location.\n" +
         "Don't give repetitive locations and give unique preference of locations for each day."
       );
     }
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     const { city, startDate, endDate, preference, latitude, longitude } = body;
 
     // Validate input
-    if (!startDate || !endDate || !city) {
+    if (!startDate || !endDate) {
       return NextResponse.json(
         { error: "Missing required fields: startDate, endDate, or preference." },
         { status: 400 }

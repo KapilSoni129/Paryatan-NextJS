@@ -25,6 +25,7 @@ export default function Home() {
   const [city, setCity] = useState<string>('');
   const [latitude, setLatitude] = useState<string>('');
   const [longitude, setLongitude] = useState<string>('');
+  const [useCurrentLocation, setUseCurrentLocation] = useState<boolean>(false);
   const [startDates, setStartDate] = useState<Date | null>(null);
   const [endDates, setEndDate] = useState<Date | null>(null);
   const [output, setOutput] = useState<DayPlan[] | null>(null);
@@ -52,6 +53,31 @@ export default function Home() {
 
   const handleEndDateChange = (date: Date | null) => {
     setEndDate(date);
+  };
+
+  const handleCurrentLocationToggle = async (value: boolean) => {
+    setUseCurrentLocation(value);
+    if (value) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLatitude(position.coords.latitude.toString());
+            setLongitude(position.coords.longitude.toString());
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+            alert('Unable to fetch location. Please allow location access or enter it manually.');
+            setUseCurrentLocation(false);
+          }
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+        setUseCurrentLocation(false);
+      }
+    } else {
+      setLatitude('');
+      setLongitude('');
+    }
   };
 
   const handleSubmit = async () => {
@@ -114,13 +140,32 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-col gap-8">
-          <input
-            type="text"
-            placeholder="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="w-full border border-gray-500 text-gray-700 rounded-full py-2 px-4 focus:outline-none focus:ring-1 focus:ring-red-500"
-          />
+          {!useCurrentLocation && (
+            <input
+              type="text"
+              placeholder="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full border border-gray-500 text-gray-700 rounded-full py-2 px-4 focus:outline-none focus:ring-1 focus:ring-red-500"
+            />
+          )}
+          <div className="flex text-gray-700 items-center justify-between">
+            <span>Use current location as start location?</span>
+            <div className="flex items-center space-x-4">
+              <button
+                className={`py-1 px-4 rounded-full ${useCurrentLocation ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                onClick={() => handleCurrentLocationToggle(true)}
+              >
+                Yes
+              </button>
+              <button
+                className={`py-1 px-4 rounded-full ${!useCurrentLocation ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                onClick={() => handleCurrentLocationToggle(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
           <div className='flex flex-col w-full text-gray-700'>
             <label htmlFor="startDate" className="block text-lg font-medium ml-2 mb-1">
               Start Date
@@ -178,30 +223,27 @@ export default function Home() {
           </button>
         </div>
         {output && output.length > 0 &&  (
-        <div className="mt-6 space-y-8">
-          {output.map((dayPlan, index) => (
-            <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold text-gray-700 mb-4">Date: {dayPlan.Date}</h2>
-              <div className="space-y-4">
-                {dayPlan.Places.map((place, idx) => (
-                  <div key={idx} className="bg-white p-4 rounded-lg shadow-sm">
-                    <div className="text-gray-600 font-semibold text-lg">{place.Name}</div>
-                    <p className="text-gray-600">City: {place.City}</p>
-                    <p className="text-gray-600">Type of Destination: {place.Type}</p>
-                    <p className="text-gray-600">Distance: {place.DistanceFromUser}</p>
-                    <p className="text-gray-600">Coordinates: {place.Latitude}, {place.Longitude}</p>
-                    <p className="text-gray-600">Rating: {place.Rating}</p>
-                    <p className="text-gray-600">Tips: {place.Tips}</p>
-                  </div>
-                ))}
+          <div className="mt-6 space-y-8">
+            {output.map((dayPlan, index) => (
+              <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold text-gray-700 mb-4">Date: {dayPlan.Date}</h2>
+                <div className="space-y-4">
+                  {dayPlan.Places.map((place, idx) => (
+                    <div key={idx} className="bg-white p-4 rounded-lg shadow-sm">
+                      <div className="text-gray-600 font-semibold text-lg">{place.Name}</div>
+                      <p className="text-gray-600">City: {place.City}</p>
+                      <p className="text-gray-600">Type of Destination: {place.Type}</p>
+                      <p className="text-gray-600">Distance: {place.DistanceFromUser}</p>
+                      <p className="text-gray-600">Coordinates: {place.Latitude}, {place.Longitude}</p>
+                      <p className="text-gray-600">Rating: {place.Rating}</p>
+                      <p className="text-gray-600">Tips: {place.Tips}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {output && output.length === 0 && (
-        <p className="mt-6 text-center text-gray-600">No recommendations available.</p>
-      )}
+            ))}
+          </div>
+        )}
       </div>
   );
 }
