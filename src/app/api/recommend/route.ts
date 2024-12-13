@@ -22,26 +22,26 @@ import { NextResponse } from "next/server";
   }: RecommendationRequest): string {
     const preferences = preference.join(", ");
 
-    const dayPlanFormat = `[{"Date":"YYYY-MM-DD","Places":[{"Name":"Place Name","City":"City Name","Type":"Destination Type","DistanceFromUser": "Distance","Latitude":0.0000,"Longitude":0.0000, "Rating":0.0, "Tips":"Tips"}]}]`;
+    const dayPlanFormat = `[{"Date":"YYYY-MM-DD","Places":[{"Name":"Place Name","City":"City Name","Type":"Destination Type","DistanceFromUser": "Distance","Latitude":0.0000,"Longitude":0.0000}]}]`;
   
     if (latitude && longitude) {
       return (
-        `Give your response strictly in this format.:${dayPlanFormat}\n` +
         `My latitudinal and longitudinal coordinates are ${latitude} latitude ${longitude} longitude\n` +
-        "Suggest me places to visit within a range of 200Km.\n" +
+        "Suggest me places to visit within a range of 150 Km strict.\n" +
         `My location preferences to visit are ${preferences}.\n` +
         `The journey start date is ${startDate}. The journey end date is ${endDate}.\n` +
         "Please also take into account the weather conditions and month of the location and try to make a round trip to comeback to the start location.\n" +
-        "Don't give repetitive locations and give unique preference of locations for each day.\n"
+        "Don't give repetitive locations and give unique preference of locations for each day.\n"+
+        `Give your response strictly in this format.:${dayPlanFormat}\n. No text only json response in the format given nothing else(no spaces no next line).`
       );
     } else {
       return (
-        `Give your response strictly in this format.:${dayPlanFormat}\n` +
-        `\nSuggest me places to visit in ${city}.\n` +
+        `Suggest me places to visit in ${city}.\n` +
         `My location preferences to visit are ${preferences}.\n` +
         `The journey start date is ${startDate}. The journey end date is ${endDate}.\n` +
         "Please also take into account the weather conditions and month of the location and try to make a round trip to comeback to the start location.\n" +
-        "Don't give repetitive locations and give unique preference of locations for each day."
+        "Don't give repetitive locations and give unique preference of locations for each day." +
+        `Give your response strictly in this format.:${dayPlanFormat}\n. No text only json response in the format given nothing else(no spaces no next line).`
       );
     }
   }
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     const result = await model.generateContent(query);
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import TripPage from './maps/page';
 
 
 interface Place {
@@ -12,8 +13,6 @@ interface Place {
   DistanceFromUser: string;
   Latitude: number;
   Longitude: number;
-  Rating: number;
-  Tips: string;
 }
 
 interface DayPlan {
@@ -139,6 +138,7 @@ export default function Home() {
             <div className='text-sm sm:text-lg'>Ask us for travel recommendations</div>
           </div>
         </div>
+        {!(output && output.length > 0) ? ( <>
         <div className="flex flex-col gap-8">
           {!useCurrentLocation && (
             <input
@@ -221,29 +221,19 @@ export default function Home() {
           >
             {loading ? 'Loading...' : 'Get Recommendation'}
           </button>
+            </>
+          ) : ( <>
+            <TripPage output={output} current = {(city && !latitude) ? false : true} />
+            <button
+              onClick={() => setOutput(null)}
+              className="bg-red-500 text-white py-2 px-8 rounded-full shadow-[0_4px_20px_rgba(239,68,68,0.8)] focus:outline-none focus:ring-2 focus:ring-red-300"
+              disabled={loading}
+            >
+              Try more recommendations
+            </button>
+            </>
+          )}
         </div>
-        {output && output.length > 0 &&  (
-          <div className="mt-6 space-y-8">
-            {output.map((dayPlan, index) => (
-              <div key={index} className="bg-gray-100 p-6 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Date: {dayPlan.Date}</h2>
-                <div className="space-y-4">
-                  {dayPlan.Places.map((place, idx) => (
-                    <div key={idx} className="bg-white p-4 rounded-lg shadow-sm">
-                      <div className="text-gray-600 font-semibold text-lg">{place.Name}</div>
-                      <p className="text-gray-600">City: {place.City}</p>
-                      <p className="text-gray-600">Type of Destination: {place.Type}</p>
-                      <p className="text-gray-600">Distance: {place.DistanceFromUser}</p>
-                      <p className="text-gray-600">Coordinates: {place.Latitude}, {place.Longitude}</p>
-                      <p className="text-gray-600">Rating: {place.Rating}</p>
-                      <p className="text-gray-600">Tips: {place.Tips}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
   );
 }
