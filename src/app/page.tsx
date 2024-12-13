@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import TripPage from './maps/page';
+import TripPage from './_components/maps';
 
 
 interface Place {
