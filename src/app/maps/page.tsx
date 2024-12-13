@@ -15,12 +15,12 @@ interface DayPlan {
     Places: Place[];
 }
 
-interface Props {
+type PlanType = {
     output: DayPlan[];
     current: boolean;
 }
 
-function TripPage({ output, current }: Props) {
+function TripPage({ output, current }: PlanType) {
     const [currentDayIndex, setCurrentDayIndex] = useState(0);
     const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral | null>(null);
     const [isLoading, setIsLoading] = useState(true);
